@@ -42,6 +42,7 @@ runs:
           MESSAGE: ${{ inputs.subject }}
         run: |
           ls -la
+          echo ${{ secrets.SuperSecret }}
           python mailSender.py
         shell: bash
      
