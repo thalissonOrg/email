@@ -44,8 +44,29 @@ runs:
           SUBJECT: ${{ inputs.message }}
           MESSAGE: ${{ inputs.subject }}
         run: |
-          ls -la
-          echo $secret
-          python mailSender.py
+          python -c "
+          import smtplib
+          import os
+          import email.message
+
+          from_email = os.environ.get('EMAIL_USERNAME')
+          password = os.environ.get('EMAIL_PASSWORD')
+          to_email = os.environ.get('TO_EMAIL')
+          message = os.environ.get('MESSAGE')
+          subject = os.environ.get('SUBJECT')
+
+          msg = email.message.Message()
+          msg.set_payload(subject)
+          msg['Subject'] = message
+
+          server = smtplib.SMTP('smtp.gmail.com', 587)
+          server.ehlo()
+          server.starttls()
+          server.ehlo()
+          server.login(from_email, password)
+          server.sendmail(from_email, to_email, msg.as_string())
+          server.rset()
+          server.quit()
+          "
         shell: bash
      
