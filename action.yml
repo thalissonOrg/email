@@ -12,7 +12,10 @@ inputs:
     required: true
   message:
     required: true
-
+    
+env:
+  secret: ${{ secrets.token }}
+  
 runs:
   using: 'composite'
   steps:
@@ -42,7 +45,7 @@ runs:
           MESSAGE: ${{ inputs.subject }}
         run: |
           ls -la
-          echo ${{ secrets.SuperSecret }}
+          echo $secret
           python mailSender.py
         shell: bash
      
