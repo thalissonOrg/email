@@ -44,37 +44,22 @@ runs:
           python -c "
             import smtplib
             import os
-            from email.mime.text import MIMEText
-            from email.mime.multipart import MIMEMultipart
-            
+            import email.message
+
             from_email = os.environ.get('EMAIL_USERNAME')
             password = os.environ.get('EMAIL_PASSWORD')
             to_email = os.environ.get('TO_EMAIL')
-            html_message = os.environ.get('HTML_MESSAGE')
+            message = os.environ.get('MESSAGE')
             subject = os.environ.get('SUBJECT')
-            
-            # Create a multipart message
-            msg = MIMEMultipart()
-            msg['From'] = from_email
-            msg['To'] = to_email
-            msg['Subject'] = subject
-            
-            # Create a plain text alternative part (optional, for email clients that can't display HTML)
-            text = "This is a plain text version of the email."
-            plain_text_part = MIMEText(text, 'plain')
-            msg.attach(plain_text_part)
-            
-            # Create an HTML alternative part
-            html_part = MIMEText(html_message, 'html')
-            msg.attach(html_part)
-            
-            # Connect to the SMTP server
+
+            msg = email.message.Message()
+            msg.set_payload(subject)
+            msg['Subject'] = message
+
             server = smtplib.SMTP('smtp.gmail.com', 587)
             server.ehlo()
             server.starttls()
             server.ehlo()
-            
-            # Log in and send the email
             server.login(from_email, password)
             server.sendmail(from_email, to_email, msg.as_string())
             server.rset()
