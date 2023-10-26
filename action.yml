@@ -13,9 +13,6 @@ inputs:
   message:
     required: true
     
-env:
-  secret: ${{ secrets.token }}
-  
 runs:
   using: 'composite'
   steps:
